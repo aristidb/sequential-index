@@ -7,11 +7,14 @@ module Data.SequentialIndex
 , one
 , sequentialIndex
 , between
+, toByteString
+, fromByteString
 )
 where
 
-import Data.Bits
-import Prelude hiding (exponent)
+import           Data.Bits
+import           Prelude         hiding (exponent)
+import qualified Data.ByteString as B
 
 -- must always be in normalised form!
 data SequentialIndex 
@@ -37,6 +40,7 @@ commonBase (SI m1 e1) (SI m2 e2) = (m1', m2', e)
           m2' = m2 `shift` (e - e2)
 
 sequentialIndex :: Integer -> Int -> SequentialIndex
+sequentialIndex 0 _ = zero
 sequentialIndex mx ex
     = case v of
         v | v < zero  -> error "Invalid SequentialIndex: below zero"
@@ -67,3 +71,17 @@ instance Show SequentialIndex where
 between :: SequentialIndex -> SequentialIndex -> SequentialIndex
 between a b = sequentialIndex (m1 + m2) (e + 1)
     where (m1, m2, e) = commonBase a b
+
+toByteString :: SequentialIndex -> B.ByteString
+toByteString (SI m e) = B.unfoldr step m'
+    where e' = (e `div` 8) * 8 + 7
+          m' = m `shift` (e' - e)
+
+          step v | v == 0 = Nothing
+                 | otherwise = let (d,m) = v `divMod` 256
+                               in Just (fromInteger m, d)
+
+fromByteString :: B.ByteString -> SequentialIndex
+fromByteString bs = sequentialIndex m (max 0 $ e - 1)
+    where (m, e) = B.foldr step (0, 0) bs
+          step w (mx, ex) = (mx `shiftL` 8 + toInteger w, ex + 8)
