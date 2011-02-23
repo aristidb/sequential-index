@@ -81,7 +81,7 @@ between a b = sequentialIndex (m1 + m2) (e + 1)
 
 prefixBits :: Int -> Integer -> SequentialIndex -> SequentialIndex
 prefixBits _ _   (SI 0 1) = error "No meaningful prefix for 'zero' possible"
-prefixBits eb mb (SI m e) = sequentialIndex ((mb `shiftL` (e - 1)) + m) (eb + e - 1)
+prefixBits eb mb (SI m e) = sequentialIndex ((mb `shiftL` e) + m) (eb + e + 1)
 
 leftChild :: SequentialIndex -> SequentialIndex
 leftChild (SI 0 1) = error "'zero' has no left child"
