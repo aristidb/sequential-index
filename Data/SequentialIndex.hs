@@ -7,6 +7,7 @@ module Data.SequentialIndex
 , one
 , root
 , sequentialIndex
+, unsafeSequentialIndex
 , between
 , prefixBits
 , build
@@ -51,13 +52,16 @@ commonBase (SI m1 e1) (SI m2 e2) = (m1', m2', e)
 sequentialIndex :: Integer -> Int -> SequentialIndex
 sequentialIndex 0 _ = zero
 sequentialIndex mx ex
-    = case () of
-        _ | v < zero  -> error "Invalid SequentialIndex: below zero"
+    = case unsafeSequentialIndex mx ex of
+        v | v < zero  -> error "Invalid SequentialIndex: below zero"
           | v > one   -> error "Invalid SequentialIndex: beyond one"
           | otherwise -> v
-    where v = until (\(SI m _) -> m `testBit` 0) 
-                    (\(SI m e) -> SI (m `shiftR` 1) (e - 1)) 
-                    (SI mx ex)
+
+unsafeSequentialIndex :: Integer -> Int -> SequentialIndex
+unsafeSequentialIndex mx ex 
+    = until (\(SI m _) -> m `testBit` 0) 
+            (\(SI m e) -> SI (m `shiftR` 1) (e - 1)) 
+            (SI mx ex)
 
 instance Bounded SequentialIndex where
     minBound = zero
