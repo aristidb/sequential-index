@@ -9,6 +9,8 @@ module Data.SequentialIndex
 , sequentialIndex
 , between
 , prefixBits
+, build
+, buildBits
 , leftChild
 , rightChild
 , toByteString
@@ -82,6 +84,12 @@ between a b = sequentialIndex (m1 + m2) (e + 1)
 prefixBits :: Int -> Integer -> SequentialIndex -> SequentialIndex
 prefixBits _ _   (SI 0 1) = error "No meaningful prefix for 'zero' possible"
 prefixBits eb mb (SI m e) = sequentialIndex ((mb `shiftL` e) + m) (eb + e + 1)
+
+build :: Int -> [Integer] -> SequentialIndex
+build nbits xs = foldr (prefixBits nbits) one xs
+
+buildBits :: (Bits a, Integral a) => [a] -> SequentialIndex
+buildBits xs = build (bitSize $ head xs) (map toInteger xs)
 
 leftChild :: SequentialIndex -> SequentialIndex
 leftChild (SI 0 1) = error "'zero' has no left child"
