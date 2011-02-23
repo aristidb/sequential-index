@@ -63,24 +63,6 @@ unsafeSequentialIndex mx ex
             (\(SI m e) -> SI (m `shiftR` 1) (e - 1)) 
             (SI mx ex)
 
-instance Bounded SequentialIndex where
-    minBound = zero
-    maxBound = one
-
-instance Ord SequentialIndex where
-    a `compare` b = a' `compare` b'
-        where (a', b', _) = commonBase a b
-
-instance Show SequentialIndex where
-    show (SI m e) = case map sbit bits of
-                      []      -> "0.0"
-                      [d1]    -> d1 : ".0"
-                      (d1:ds) -> d1 : '.' : ds
-        where bits = map (testBit m) [e - 1, e - 2 .. 0]
-              
-              sbit False = '0'
-              sbit True  = '1'
-
 between :: SequentialIndex -> SequentialIndex -> SequentialIndex
 between a b = sequentialIndex (m1 + m2) (e + 1)
     where (m1, m2, e) = commonBase a b
@@ -117,3 +99,22 @@ fromByteString :: B.ByteString -> SequentialIndex
 fromByteString bs = sequentialIndex m e
     where (m, e) = B.foldr step (0, 0) bs
           step w (mx, ex) = (mx `shiftL` 8 + toInteger w, ex + 8)
+
+
+instance Bounded SequentialIndex where
+    minBound = zero
+    maxBound = one
+
+instance Ord SequentialIndex where
+    a `compare` b = a' `compare` b'
+        where (a', b', _) = commonBase a b
+
+instance Show SequentialIndex where
+    show (SI m e) = case map sbit bits of
+                      []      -> "0.0"
+                      [d1]    -> d1 : ".0"
+                      (d1:ds) -> d1 : '.' : ds
+        where bits = map (testBit m) [e - 1, e - 2 .. 0]
+              
+              sbit False = '0'
+              sbit True  = '1'
