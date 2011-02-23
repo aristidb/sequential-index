@@ -33,6 +33,8 @@ Maintainer:          aristidb@googlemail.com
 -- A copyright notice.
 Copyright:           Copyright (C) 2011 Aristid Breitkreuz
 
+Homepage:            https://github.com/aristidb/sequential-index
+
 Category:            Data
 
 Build-type:          Simple
