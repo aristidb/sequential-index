@@ -1,1 +1,4 @@
 Sequential index numbers between 0.0 and 1.0 that allow arbitrarily inserting new numbers in between. They can possibly used for disk-based and other special containers, where adding a new element without changing the indexes of the other elements is important.
+
+Conceptually, SequentialIndex denotes a path to an element in an imaginary binary tree.
+

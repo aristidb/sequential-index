@@ -42,8 +42,8 @@ commonBase (SI m1 e1) (SI m2 e2) = (m1', m2', e)
 sequentialIndex :: Integer -> Int -> SequentialIndex
 sequentialIndex 0 _ = zero
 sequentialIndex mx ex
-    = case v of
-        v | v < zero  -> error "Invalid SequentialIndex: below zero"
+    = case () of
+        _ | v < zero  -> error "Invalid SequentialIndex: below zero"
           | v > one   -> error "Invalid SequentialIndex: beyond one"
           | otherwise -> v
     where v = until (\(SI m _) -> m `testBit` 0) 
@@ -77,9 +77,9 @@ toByteString (SI m e) = B.unfoldr step m'
     where e' = (e `div` 8) * 8 + 7
           m' = m `shift` (e' - e)
 
-          step v | v == 0 = Nothing
-                 | otherwise = let (d,m) = v `divMod` 256
-                               in Just (fromInteger m, d)
+          step 0 = Nothing
+          step v = let (q, r) = v `divMod` 256
+                   in Just (fromInteger r, q)
 
 fromByteString :: B.ByteString -> SequentialIndex
 fromByteString bs = sequentialIndex m (max 0 $ e - 1)
