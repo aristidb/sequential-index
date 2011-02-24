@@ -17,6 +17,7 @@ where
 
 import           Control.Monad
 import           Data.Bits
+import           Data.Maybe
 import           Prelude              hiding (exponent)
 import qualified Data.ByteString      as B
 import qualified Data.SequentialIndex as Closed
@@ -45,11 +46,11 @@ fromClosed si = case () of
 root :: SequentialIndex
 root = OSI Closed.root
 
-leftChild :: SequentialIndex -> Maybe SequentialIndex
-leftChild = fmap OSI . Closed.leftChild . toClosed
+leftChild :: SequentialIndex -> SequentialIndex
+leftChild = OSI . fromJust . Closed.leftChild . toClosed
 
-rightChild :: SequentialIndex -> Maybe SequentialIndex
-rightChild = fmap OSI . Closed.rightChild . toClosed
+rightChild :: SequentialIndex -> SequentialIndex
+rightChild = OSI . fromJust . Closed.rightChild . toClosed
 
 prefixBits :: Int -> Integer -> SequentialIndex -> SequentialIndex
 prefixBits eb mb = OSI . Closed.prefixBits eb mb . toClosed
