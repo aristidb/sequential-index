@@ -1,8 +1,24 @@
 module Data.SequentialIndex.Open
+(
+  SequentialIndex
+, mantissa
+, exponent
+, sequentialIndex
+, toClosed
+, fromClosed
+, root
+, leftChild
+, rightChild
+, prefixBits
+, toByteString
+, fromByteString
+)
 where
 
+import           Control.Monad
 import           Data.Bits
 import           Prelude              hiding (exponent)
+import qualified Data.ByteString      as B
 import qualified Data.SequentialIndex as Closed
 
 newtype SequentialIndex = OSI Closed.SequentialIndex
@@ -34,6 +50,15 @@ leftChild = OSI . Closed.leftChild . toClosed
 
 rightChild :: SequentialIndex -> SequentialIndex
 rightChild = OSI . Closed.rightChild . toClosed
+
+prefixBits :: Int -> Integer -> SequentialIndex -> SequentialIndex
+prefixBits eb mb = OSI . Closed.prefixBits eb mb . toClosed
+
+toByteString :: SequentialIndex -> B.ByteString
+toByteString = Closed.toByteString . toClosed
+
+fromByteString :: B.ByteString -> Maybe SequentialIndex
+fromByteString = fromClosed <=< Closed.fromByteString
 
 instance Show SequentialIndex where
     show si = '*' : map (\i -> if testBit m i then 'R' else 'L') [e - 2, e - 3 .. 1]
