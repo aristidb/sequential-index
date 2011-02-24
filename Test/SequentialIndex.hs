@@ -31,6 +31,15 @@ prop_rightChildZero = rightChild zero == Nothing
 prop_rightChildOne = rightChild one == Nothing
 prop_rightChildRoot = isJust $ rightChild root
 
+prop_parentLeft x = maybe True (== x) $ parent =<< leftChild x
+prop_parentRight x = maybe True (== x) $ parent =<< rightChild x
+
+prop_parentZero = parent zero == Nothing
+prop_parentOne = parent one == Nothing
+prop_parentRoot = parent root == Nothing
+prop_parentRootLeft = (parent =<< leftChild root) == Just root
+prop_parentRootRight = (parent =<< rightChild root) == Just root
+
 main = $(quickCheckAll)
 
 testWith = $(forAllProperties)
