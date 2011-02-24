@@ -87,16 +87,17 @@ rightChild (SI 1 1) = error "'one' has no right child"
 rightChild (SI m e) = SI ((m `shiftR` 1) `shiftL` 2 .|. 3) (e + 1)
 
 toByteString :: SequentialIndex -> B.ByteString
-toByteString (SI m e) = B.unfoldr step m'
-    where e' = (e `div` 8 + 1) * 8
+toByteString (SI m e) = B.unfoldr step (m', e')
+    where e' = ((e + 7) `div` 8) * 8
           m' = m `shift` (e' - e)
 
-          step 0 = Nothing
-          step v = let (q, r) = v `divMod` 256
-                   in Just (fromInteger r, q)
+          step (_, 0) = Nothing
+          step (v, ex) = let (q, r) = v `divMod` 256
+                         in Just (fromInteger r, (q, ex - 8))
 
 fromByteString :: B.ByteString -> SequentialIndex
-fromByteString bs = sequentialIndex m e
+fromByteString bs | B.null bs = zero
+                  | otherwise = sequentialIndex m e
     where (m, e) = B.foldr step (0, 0) bs
           step w (mx, ex) = (mx `shiftL` 8 + toInteger w, ex + 8)
 
