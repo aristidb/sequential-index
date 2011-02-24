@@ -107,9 +107,9 @@ toByteString (SI m e) = B.unfoldr step (m', e')
           step (v, ex) = let (q, r) = v `divMod` 256
                          in Just (fromInteger r, (q, ex - 8))
 
-fromByteString :: B.ByteString -> SequentialIndex
-fromByteString bs | B.null bs = zero
-                  | otherwise = sequentialIndex m e
+fromByteString :: B.ByteString -> Maybe SequentialIndex
+fromByteString bs | B.null bs = Just zero
+                  | otherwise = trySequentialIndex m e
     where (m, e) = B.foldr step (0, 0) bs
           step w (mx, ex) = (mx `shiftL` 8 + toInteger w, ex + 8)
 
