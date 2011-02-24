@@ -49,7 +49,8 @@ Cabal-version:       >=1.2
 
 Library
   -- Modules exported by the library.
-  Exposed-modules:     Data.SequentialIndex
+  Exposed-modules:     Data.SequentialIndex,
+                       Data.SequentialIndex.Open
 
   -- GHC Options.
   GHC-Options:         -Wall
