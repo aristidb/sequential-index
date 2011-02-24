@@ -89,14 +89,14 @@ build nbits xs = foldr (prefixBits nbits) one xs
 buildBits :: (Bits a, Integral a) => [a] -> SequentialIndex
 buildBits xs = build (bitSize $ head xs) (map toInteger xs)
 
-leftChild :: SequentialIndex -> SequentialIndex
-leftChild (SI 0 1) = error "'zero' has no left child"
-leftChild (SI m e) = SI ((m `shiftR` 1) `shiftL` 2 .|. 1) (e + 1)
+leftChild :: SequentialIndex -> Maybe SequentialIndex
+leftChild (SI 0 1) = Nothing
+leftChild (SI m e) = Just $ SI ((m `shiftR` 1) `shiftL` 2 .|. 1) (e + 1)
 
-rightChild :: SequentialIndex -> SequentialIndex
-rightChild (SI 0 1) = error "'zero' has no real right child"
-rightChild (SI 1 1) = error "'one' has no right child"
-rightChild (SI m e) = SI ((m `shiftR` 1) `shiftL` 2 .|. 3) (e + 1)
+rightChild :: SequentialIndex -> Maybe SequentialIndex
+rightChild (SI 0 1) = Nothing
+rightChild (SI 1 1) = Nothing
+rightChild (SI m e) = Just $ SI ((m `shiftR` 1) `shiftL` 2 .|. 3) (e + 1)
 
 toByteString :: SequentialIndex -> B.ByteString
 toByteString (SI m e) = B.unfoldr step (m', e')

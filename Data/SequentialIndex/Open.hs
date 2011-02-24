@@ -45,11 +45,11 @@ fromClosed si = case () of
 root :: SequentialIndex
 root = OSI Closed.root
 
-leftChild :: SequentialIndex -> SequentialIndex
-leftChild = OSI . Closed.leftChild . toClosed
+leftChild :: SequentialIndex -> Maybe SequentialIndex
+leftChild = fmap OSI . Closed.leftChild . toClosed
 
-rightChild :: SequentialIndex -> SequentialIndex
-rightChild = OSI . Closed.rightChild . toClosed
+rightChild :: SequentialIndex -> Maybe SequentialIndex
+rightChild = fmap OSI . Closed.rightChild . toClosed
 
 prefixBits :: Int -> Integer -> SequentialIndex -> SequentialIndex
 prefixBits eb mb = OSI . Closed.prefixBits eb mb . toClosed
