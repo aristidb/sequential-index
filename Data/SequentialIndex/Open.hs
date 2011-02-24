@@ -4,6 +4,7 @@ module Data.SequentialIndex.Open
 , mantissa
 , exponent
 , sequentialIndex
+, tryFromBools
 , toClosed
 , fromClosed
 , root
@@ -34,6 +35,9 @@ exponent = Closed.exponent . toClosed
 
 sequentialIndex ::  Int -> Integer -> SequentialIndex
 sequentialIndex eb me = OSI $ Closed.prefixBits eb me Closed.one
+
+tryFromBools :: [Bool] -> Maybe SequentialIndex
+tryFromBools = fromClosed <=< Closed.tryFromBools
 
 toClosed :: SequentialIndex -> Closed.SequentialIndex
 toClosed (OSI si) = si
