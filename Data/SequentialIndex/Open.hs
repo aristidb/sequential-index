@@ -9,6 +9,7 @@ module Data.SequentialIndex.Open
 , root
 , leftChild
 , rightChild
+, parent
 , prefixBits
 , toByteString
 , fromByteString
@@ -51,6 +52,9 @@ leftChild = OSI . fromJust . Closed.leftChild . toClosed
 
 rightChild :: SequentialIndex -> SequentialIndex
 rightChild = OSI . fromJust . Closed.rightChild . toClosed
+
+parent :: SequentialIndex -> Maybe SequentialIndex
+parent = fmap OSI . Closed.parent . toClosed
 
 prefixBits :: Int -> Integer -> SequentialIndex -> SequentialIndex
 prefixBits eb mb = OSI . Closed.prefixBits eb mb . toClosed
