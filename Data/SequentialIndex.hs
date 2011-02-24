@@ -95,13 +95,12 @@ leftChild (SI 0 1) = Nothing
 leftChild (SI m e) = Just $ SI ((m `shiftR` 1) `shiftL` 2 .|. 1) (e + 1)
 
 rightChild :: SequentialIndex -> Maybe SequentialIndex
-rightChild (SI 0 1) = Nothing
-rightChild (SI 1 1) = Nothing
+rightChild (SI _ 1) = Nothing
 rightChild (SI m e) = Just $ SI ((m `shiftR` 1) `shiftL` 2 .|. 3) (e + 1)
 
 parent :: SequentialIndex -> Maybe SequentialIndex
-parent (SI _ e) | e <= 2 = Nothing
-parent (SI m e)          = Just $ SI ((m `shiftR` 2) `shiftL` 1 .|. 1) (e - 1)
+parent (SI _ 1) = Nothing
+parent (SI m e) = Just $ SI ((m `shiftR` 2) `shiftL` 1 .|. 1) (e - 1)
 
 toByteString :: SequentialIndex -> B.ByteString
 toByteString (SI m e) = B.unfoldr step (m', e')

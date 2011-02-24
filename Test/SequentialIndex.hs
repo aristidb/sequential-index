@@ -36,7 +36,7 @@ prop_parentRight x = maybe True (== x) $ parent =<< rightChild x
 
 prop_parentZero = parent zero == Nothing
 prop_parentOne = parent one == Nothing
-prop_parentRoot = parent root == Nothing
+prop_parentRoot = parent root == Just one
 prop_parentRootLeft = (parent =<< leftChild root) == Just root
 prop_parentRootRight = (parent =<< rightChild root) == Just root
 
