@@ -8,6 +8,7 @@ module Data.SequentialIndex
 , root
 , sequentialIndex
 , unsafeSequentialIndex
+, tryFromBools
 , between
 , prefixBits
 , build
@@ -57,11 +58,22 @@ sequentialIndex mx ex
           | v > one   -> error "Invalid SequentialIndex: beyond one"
           | otherwise -> v
 
+trySequentialIndex :: Integer -> Int -> Maybe SequentialIndex
+trySequentialIndex 0 _ = Just zero
+trySequentialIndex mx ex
+    = case unsafeSequentialIndex mx ex of
+        v | v < zero  -> Nothing
+          | v > one   -> Nothing
+          | otherwise -> Just v
+
 unsafeSequentialIndex :: Integer -> Int -> SequentialIndex
 unsafeSequentialIndex mx ex 
     = until (\(SI m _) -> m `testBit` 0) 
             (\(SI m e) -> SI (m `shiftR` 1) (e - 1)) 
             (SI mx ex)
+
+tryFromBools :: [Bool] -> Maybe SequentialIndex
+tryFromBools = uncurry trySequentialIndex . foldr (\x (s, n) -> ((s `shiftL` 1) .|. (if x then 1 else 0), n + 1)) (0, 0)
 
 between :: SequentialIndex -> SequentialIndex -> SequentialIndex
 between a b = sequentialIndex (m1 + m2) (e + 1)
