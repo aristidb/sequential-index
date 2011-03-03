@@ -1,21 +1,28 @@
 module Data.SequentialIndex
 (
+-- * Type
   SequentialIndex
+-- * Extractors
 , mantissa
 , exponent
+-- * Constructors
 , zero
 , one
 , root
 , sequentialIndex
 , unsafeSequentialIndex
 , tryFromBools
+-- * Operations
+-- ** Arithmetical operations
 , between
 , prefixBits
+-- ** Tree operations
 , build
 , buildBits
 , leftChild
 , rightChild
 , parent
+-- * Conversion
 , toByteString
 , fromByteString
 )
@@ -25,23 +32,39 @@ import           Data.Bits
 import           Prelude         hiding (exponent)
 import qualified Data.ByteString as B
 
--- must always be in normalised form!
+-- | An arbitrary-precision number between 0.0 and 1.0. To create new numbers,
+-- use 'between'.
+-- 
+-- Each number consist of a 'mantissa' (>= 0) and an 'exponent' (> 0), so that
+-- its numeric value equals @mantissa x * 2 ^ (1 - exponent x)@. The constraint
+-- that it must lie between 0.0 and 1.0 is enforced in the constructors.
+-- 
+-- It is possible to span a hypothetical tree in this number scheme. Discarding
+-- the last binary digit of the mantissa, which has to be a 1, each digit of
+-- the mantissa denotes a branch in this hypothetical binary tree. So a whole
+-- 'SequentialIndex' (if it ends with 1) corresponds with a path in a binary
+-- tree.
 data SequentialIndex 
-    = SI !Integer !Int
+    = SI !Integer !Int -- must always be in normalised form!
     deriving (Eq)
 
+-- | Extracts the mantissa.
 mantissa :: SequentialIndex -> Integer
 mantissa (SI m _) = m
 
+-- | Extracts the exponent.
 exponent :: SequentialIndex -> Int
 exponent (SI _ e) = e
 
+-- | The lowest possible number: 0.0.
 zero :: SequentialIndex
 zero = SI 0 1
 
+-- | The highest possible number: 1.0.
 one :: SequentialIndex
 one = SI 1 1
 
+-- | 
 root :: SequentialIndex
 root = between zero one
 
