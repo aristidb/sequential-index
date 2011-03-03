@@ -10,7 +10,7 @@ Name:                sequential-index
 Version:             0.1
 
 -- A short (one-line) description of the package.
-Synopsis:            Sequential index numbers between 0.0 and 1.0 that allow arbitrarily inserting new numbers in between (for special containers).
+Synopsis:            Sequential numbers that allow arbitrarily inserting new numbers (for containers)
 
 -- A longer description of the package.
 Description:         Sequential index numbers between 0.0 and 1.0 that allow arbitrarily inserting new numbers in between. They can possibly used for disk-based and other special containers, where adding a new element without changing the indexes of the other elements is important.
