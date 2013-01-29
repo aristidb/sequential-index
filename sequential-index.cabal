@@ -7,7 +7,7 @@ Name:                sequential-index
 -- The package version. See the Haskell package versioning policy
 -- (http://www.haskell.org/haskellwiki/Package_versioning_policy) for
 -- standards guiding when and how versions should be incremented.
-Version:             0.2
+Version:             0.2.0.1
 
 -- A short (one-line) description of the package.
 Synopsis:            Sequential numbers that allow arbitrarily inserting numbers - for containers
@@ -59,7 +59,7 @@ Library
   -- Packages needed in order to build this package.
   Build-depends:
                        base >=4.2.0.0 && <5,
-                       bytestring >=0.9.1.5 && <0.10
+                       bytestring >=0.9.1.5 && <0.11
   
   -- Modules not exported by this package.
   -- Other-modules:       
